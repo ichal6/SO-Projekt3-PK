@@ -20,13 +20,13 @@ int odlaczenie2;
 char *adres;
 char* ASCIIcode;
 int const sizeOfSemaphore = 2;
-key_t keyForsemaphore;
+key_t key;
 int semaphoreId;
 FILE *outputFile;
 
 void createSharedMemory()
   {
-	pamiec=shmget(960411,256,0777|IPC_CREAT);
+	pamiec=shmget(key, 256, 0777|IPC_CREAT);
     if (pamiec==-1) 
       {
         printf("Problemy z utworzeniem pamieci dzielonej.\n");
@@ -67,14 +67,16 @@ void openFile(){
     }
 }
 
+key_t getKey(){
+    if((key = ftok(".",'Z')) == -1)
+    {
+        perror("Problem with generate a key!");
+        exit(2);
+    }
+}
+
 static void getSemaphore(){
-    // if((keyForsemaphore = ftok(".",'Z')) == -1)
-    // {
-    //     perror("Problem with generate a key!");
-    //     exit(2);
-    // }
-    keyForsemaphore = 110496;
-    semaphoreId=semget(keyForsemaphore, sizeOfSemaphore, 0600|IPC_CREAT);
+    semaphoreId=semget(key, sizeOfSemaphore, 0600|IPC_CREAT);
     if(semaphoreId==-1){
         perror("Problem with create a semaphore.");
         exit(EXIT_FAILURE);
@@ -122,14 +124,16 @@ void consumption(){
     srand(time(NULL));
     while(1)
     {
-        printf("I'm waiting for product\n");
-        
-        semaphoreDown(SEM_CONSUMER);
-        sleep((rand()%3)+1);
-        if(*adres == EOF){
+        if(adres[0] == EOF){
           printf("Producent was finished work.\n");
           break;
         }
+
+        printf("I'm waiting for product\n");
+
+        semaphoreDown(SEM_CONSUMER);
+        sleep((rand()%3)+1);
+
         printf("Odczytalem: %s\n", adres);
         
         fprintf(outputFile, "%s", adres);
@@ -142,6 +146,7 @@ void consumption(){
 
 int main(int argc, char* argv[])
   {
+    getKey();
     createSharedMemory();
     getSemaphore();
     attachSharedMemory();
