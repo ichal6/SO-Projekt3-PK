@@ -132,9 +132,10 @@ void consumption(){
         semaphoreDown(SEM_CONSUMER);
         sleep((rand()%3)+1);
 
-        printf("Odczytalem: %s\n", adres);
-        if(*adres != EOF)
+        if(*adres != EOF){
           fprintf(outputFile, "%s", adres);
+          printf("Odczytalem: %s\n", adres);
+        }
 
         semaphoreUp(SEM_PRODUCER);
         sleep((rand()%3)+1);
