@@ -27,7 +27,7 @@ FILE *inputFile;
 
 void createSharedMemory()
   {
-	pamiec=shmget(key, 256, 0777|IPC_CREAT);
+	pamiec=shmget(key, 256, 0600|IPC_CREAT);
     if (pamiec==-1) 
       {
         printf("Problemy z utworzeniem pamieci dzielonej.\n");
