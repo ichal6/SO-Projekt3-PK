@@ -124,7 +124,7 @@ void consumption(){
     srand(time(NULL));
     while(1)
     {
-        if(adres[0] == EOF){
+        if(*adres == EOF){
           printf("Producent was finished work.\n");
           break;
         }

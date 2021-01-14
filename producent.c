@@ -12,13 +12,14 @@
 
 #define SEM_PRODUCER 0
 #define SEM_CONSUMER 1
+#define SEM_END 2
 
 
 int pamiec;
 int odlaczenie1;
 int odlaczenie2;
 char *adres;
-int const sizeOfSemaphore = 2;
+int const sizeOfSemaphore = 3;
 key_t key;
 int semaphoreId;
 FILE *inputFile;
@@ -73,42 +74,42 @@ void openFile(){
 }
 
 key_t getKey(){
-    if((key = ftok(".",'Z')) == -1)
-    {
-        perror("Problem with generate a key!");
-        exit(2);
-    }
+  if((key = ftok(".",'Z')) == -1)
+  {
+      perror("Problem with generate a key!");
+      exit(2);
+  }
 }
 
 static void getSemaphore(){
-    semaphoreId=semget(key, sizeOfSemaphore, 0600|IPC_CREAT);
-    if(semaphoreId==-1){
-        perror("Problem with create a semaphore.");
-        exit(EXIT_FAILURE);
-    } else{
-        printf("Semaphore has created! Id - %d\n", semaphoreId);
-    }  
+  semaphoreId=semget(key, sizeOfSemaphore, 0600|IPC_CREAT);
+  if(semaphoreId==-1){
+      perror("Problem with create a semaphore.");
+      exit(EXIT_FAILURE);
+  } else{
+      printf("Semaphore has created! Id - %d\n", semaphoreId);
+  }  
 }
 
 static void setSemaphore(void){
-    int ustaw_sem;
+  int ustaw_sem;
 
-      ustaw_sem = semctl(semaphoreId, SEM_PRODUCER, SETVAL, 1);
-      if(ustaw_sem == -1){
-          char errorMessage[100];
-          sprintf(errorMessage, "Problem with set a semaphore - %d", SEM_PRODUCER);
-          perror(errorMessage);
-          exit(EXIT_FAILURE);
-      }
+  ustaw_sem = semctl(semaphoreId, SEM_PRODUCER, SETVAL, 1);
+  if(ustaw_sem == -1){
+      char errorMessage[100];
+      sprintf(errorMessage, "Problem with set a semaphore - %d", SEM_PRODUCER);
+      perror(errorMessage);
+      exit(EXIT_FAILURE);
+  }
 
-      ustaw_sem = semctl(semaphoreId, SEM_CONSUMER, SETVAL, 0);
-      if(ustaw_sem == -1){
-          char errorMessage[100];
-          sprintf(errorMessage, "Problem with set a semaphore - %d", SEM_PRODUCER);
-          perror(errorMessage);
-          exit(EXIT_FAILURE);
-      }
-    
+  ustaw_sem = semctl(semaphoreId, SEM_CONSUMER, SETVAL, 0);
+  if(ustaw_sem == -1){
+      char errorMessage[100];
+      sprintf(errorMessage, "Problem with set a semaphore - %d", SEM_PRODUCER);
+      perror(errorMessage);
+      exit(EXIT_FAILURE);
+  }
+  
 }
 
 
