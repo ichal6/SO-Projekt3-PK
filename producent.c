@@ -173,18 +173,6 @@ void production(){
     }
 }
 
-static void deleteSemaphore(void){
-    int sem;
-    sem = semctl(semaphoreId, 0, IPC_RMID);
-
-    if(sem==-1){
-        perror("Problem with delete a semaphore.");
-        exit(EXIT_FAILURE);
-    } else{
-        printf("Semaphore has deleted.\n");
-    }
-}
-
 int main(int argc, char* argv[])
   {
     getKey();
@@ -197,7 +185,6 @@ int main(int argc, char* argv[])
     production();
 
     detachSharedMemory();
-    deleteSemaphore();
     fclose(inputFile);
     exit(EXIT_SUCCESS);
   }
