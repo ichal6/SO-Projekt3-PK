@@ -128,15 +128,13 @@ void consumption(){
           printf("Producent was finished work.\n");
           break;
         }
-
         printf("I'm waiting for product\n");
-
         semaphoreDown(SEM_CONSUMER);
         sleep((rand()%3)+1);
 
         printf("Odczytalem: %s\n", adres);
-        
-        fprintf(outputFile, "%s", adres);
+        if(*adres != EOF)
+          fprintf(outputFile, "%s", adres);
 
         semaphoreUp(SEM_PRODUCER);
         sleep((rand()%3)+1);
