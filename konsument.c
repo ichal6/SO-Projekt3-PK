@@ -156,11 +156,11 @@ static void deleteSemaphore(void){
 
 int main(int argc, char* argv[])
   {
+    openFile();
     getKey();
     createSharedMemory();
     getSemaphore();
     attachSharedMemory();
-    openFile();
 
     consumption();
     

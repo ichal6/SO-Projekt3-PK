@@ -175,12 +175,12 @@ void production(){
 
 int main(int argc, char* argv[])
   {
+    openFile();
     getKey();
     createSharedMemory();
     getSemaphore();
     setSemaphore();
     attachSharedMemory();
-    openFile();
 
     production();
 
